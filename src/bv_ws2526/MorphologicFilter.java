@@ -90,12 +90,15 @@ public class MorphologicFilter {
 	public void closing(RasterImage src, RasterImage dst, boolean[][] kernel) {
 		// TODO: implement closing by using dilation() and erosion()
 
-			RasterImage temp = new RasterImage(src.width, src.height);
+			RasterImage temp1 = new RasterImage(src.width, src.height);
+        RasterImage temp2 = new RasterImage(src.width, src.height);
 
+        // 1 führe die eigentliche "Closing"-Reihenfolge durch (Dilatation -> Erosion)
+        dilation(src, temp1, kernel);
+        erosion(temp1, temp2, kernel);
 
-			erosion(src, temp, kernel);
-
-			dilation(temp, dst, kernel);
+        // 2 Ergebnis kopieren
+        System.arraycopy(temp2.argb, 0, dst.argb, 0, temp2.argb.length);
 	}
 	
 
