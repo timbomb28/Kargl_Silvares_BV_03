@@ -8,13 +8,13 @@
 package bv_ws2526;
 
 public class MorphologicFilter {
- 		   		   	 	
+
 	// filter implementations go here:
-	
+
 	public void copy(RasterImage src, RasterImage dst) {
 		System.arraycopy(src.argb, 0, dst.argb, 0, src.argb.length);
 	}
-	
+
 	public void dilation(RasterImage src, RasterImage dst, boolean[][] kernel) {
 		// kernel's first dimension: y (row), second dimension: x (column)
 		// TODO: dilate the image using the given kernel
@@ -55,49 +55,36 @@ public class MorphologicFilter {
 		}
 
 	}
- 		   		   	 	
+
 	public void erosion(RasterImage src, RasterImage dst, boolean[][] kernel) {
-		// This is already implemented. Nothing to do.
-		// It will function once you implemented dilation and RasterImage invert()
+
 		src.invert();
 		dilation(src, dst, kernel);
 		dst.invert();
 		src.invert();
 	}
-	
+
 
 	public void opening(RasterImage src, RasterImage dst, boolean[][] kernel) {
-		RasterImage temp1 = new RasterImage(src.width, src.height);
-		RasterImage temp2 = new RasterImage(src.width, src.height);
+		// TODO: implement opening by using dilation() and erosion()
 
-		// 1️⃣ invertiere Eingangsbild, um korrekte Dualität zu wahren
-		src.invert();
 
-		// 2️⃣ führe die eigentliche "Opening"-Reihenfolge durch (Erosion -> Dilatation)
-		erosion(src, temp1, kernel);
-		dilation(temp1, temp2, kernel);
+		RasterImage temp = new RasterImage(src.width, src.height);
+		dilation(src, temp, kernel);
 
-		// 3️⃣ wieder zurück-invertieren
-		temp2.invert();
 
-		// 4️⃣ Ergebnis kopieren
-		System.arraycopy(temp2.argb, 0, dst.argb, 0, temp2.argb.length);
-
-		// 5️⃣ Ursprungsbild wieder zurücksetzen
-		src.invert();
+		erosion(temp, dst, kernel);
 	}
 
 	public void closing(RasterImage src, RasterImage dst, boolean[][] kernel) {
 		// TODO: implement closing by using dilation() and erosion()
 
-			RasterImage temp = new RasterImage(src.width, src.height);
+		RasterImage tmp = new RasterImage(src.width, src.height);
+		erosion(src, tmp, kernel);
+		dilation(tmp, dst, kernel);
 
-
-			erosion(src, temp, kernel);
-
-			dilation(temp, dst, kernel);
 	}
-	
+//test
 
 }
  		   		   	 	
