@@ -83,13 +83,13 @@ public class RasterImage {
 				int b = argb[i] & 0xFF;
 
 				// Grauwert berechnen (Luminanz)
-				int gray = (int)(0.299 * r + 0.587 * g + 0.114 * b);
-
-				int binary = (gray >= threshold) ? 0xFFFFFFFF : 0xFF000000; // weiß oder schwarz
-
-				argb[i] = binary;
-
-			}
+				int grayValue = (int)(0.299 * r + 0.587 * g + 0.114 * b);
+            if (grayValue >= threshold) {
+                argb[i] = 0xFFFFFFFF; // set to white
+            } else {
+                argb[i] = 0xFF000000; // set to black
+            }
+        }
 
 	}
 	
@@ -97,8 +97,12 @@ public class RasterImage {
 		// TODO: invert the image (assuming a binary image)
 
 			for (int i = 0; i < argb.length; i++) {
-				argb[i] = (argb[i] == 0xFFFFFFFF) ? 0xFF000000 : 0xFFFFFFFF;
-			}
+            if ((argb[i] & 0xFFFFFF) == 0xFFFFFF) {
+                argb[i] = 0xFF000000; // set to black
+            } else {
+                argb[i] = 0xFFFFFFFF; // set to white
+            }
+        }
 
 	}
 	
