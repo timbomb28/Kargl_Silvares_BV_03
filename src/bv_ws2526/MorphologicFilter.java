@@ -67,35 +67,20 @@ public class MorphologicFilter {
 	
 
 	public void opening(RasterImage src, RasterImage dst, boolean[][] kernel) {
-		RasterImage temp1 = new RasterImage(src.width, src.height);
-		RasterImage temp2 = new RasterImage(src.width, src.height);
+		// TODO: implement opening by using dilation() and erosion()
+        RasterImage temp = new RasterImage(src.width, src.height);
+        dilation(src, temp, kernel);
 
-		// 1️⃣ invertiere Eingangsbild, um korrekte Dualität zu wahren
-		src.invert();
-
-		// 2️⃣ führe die eigentliche "Opening"-Reihenfolge durch (Erosion -> Dilatation)
-		erosion(src, temp1, kernel);
-		dilation(temp1, temp2, kernel);
-
-		// 3️⃣ wieder zurück-invertieren
-		temp2.invert();
-
-		// 4️⃣ Ergebnis kopieren
-		System.arraycopy(temp2.argb, 0, dst.argb, 0, temp2.argb.length);
-
-		// 5️⃣ Ursprungsbild wieder zurücksetzen
-		src.invert();
+        // Perform erosion on the dilated image
+        erosion(temp, dst, kernel);
 	}
-
+	
 	public void closing(RasterImage src, RasterImage dst, boolean[][] kernel) {
 		// TODO: implement closing by using dilation() and erosion()
+        RasterImage tmp = new RasterImage(src.width, src.height);
+        erosion(src, tmp, kernel);
+        dilation(tmp, dst, kernel);
 
-			RasterImage temp = new RasterImage(src.width, src.height);
-
-
-			erosion(src, temp, kernel);
-
-			dilation(temp, dst, kernel);
 	}
 	
 
