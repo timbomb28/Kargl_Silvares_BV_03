@@ -27,10 +27,10 @@ public class MorphologicFilter {
 		int kWidth = kernel[0].length;
 		int kCenterY = kHeight / 2;
 		int kCenterX = kWidth / 2;
-
+		
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
-				boolean shouldBeWhite = false;
+				boolean shouldBeBlack = false;
 
 				for (int ky = 0; ky < kHeight; ky++) {
 					for (int kx = 0; kx < kWidth; kx++) {
@@ -41,16 +41,16 @@ public class MorphologicFilter {
 
 						if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
 							int neighborPixel = srcPixels[ny * width + nx];
-							if ((neighborPixel & 0xFFFFFF) == 0xFFFFFF) {
-								shouldBeWhite = true;
+							if ((neighborPixel & 0xFFFFFF) == 0x000000) {
+								shouldBeBlack = true;
 								break;
 							}
 						}
 					}
-					if (shouldBeWhite) break;
+					if (shouldBeBlack) break;
 				}
 
-				dstPixels[y * width + x] = shouldBeWhite ? 0xFFFFFFFF : 0xFF000000;
+				dstPixels[y * width + x] = shouldBeBlack ? 0xFF000000 : 0xFFFFFFFF;
 			}
 		}
 
@@ -69,17 +69,19 @@ public class MorphologicFilter {
 	public void opening(RasterImage src, RasterImage dst, boolean[][] kernel) {
 		// TODO: implement opening by using dilation() and erosion()
         RasterImage temp = new RasterImage(src.width, src.height);
-        dilation(src, temp, kernel);
 
-        // Perform erosion on the dilated image
-        erosion(temp, dst, kernel);
+		erosion(temp, dst, kernel);
+		dilation(src, temp, kernel);
+
+
 	}
 	
 	public void closing(RasterImage src, RasterImage dst, boolean[][] kernel) {
 		// TODO: implement closing by using dilation() and erosion()
         RasterImage tmp = new RasterImage(src.width, src.height);
-        erosion(src, tmp, kernel);
+
         dilation(tmp, dst, kernel);
+		erosion(src, tmp, kernel);
 
 	}
 	
