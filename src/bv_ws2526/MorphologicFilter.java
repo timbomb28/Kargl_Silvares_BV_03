@@ -70,18 +70,17 @@ public class MorphologicFilter {
 		// TODO: implement opening by using dilation() and erosion()
         RasterImage temp = new RasterImage(src.width, src.height);
 
-		erosion(temp, dst, kernel);
-		dilation(src, temp, kernel);
-
+		erosion(src, temp, kernel);
+		dilation(temp, dst, kernel);
 
 	}
 	
 	public void closing(RasterImage src, RasterImage dst, boolean[][] kernel) {
 		// TODO: implement closing by using dilation() and erosion()
-        RasterImage tmp = new RasterImage(src.width, src.height);
+        RasterImage temp = new RasterImage(src.width, src.height);
 
-        dilation(tmp, dst, kernel);
-		erosion(src, tmp, kernel);
+		dilation(src, temp, kernel);
+		erosion(temp, dst, kernel);
 
 	}
 	
